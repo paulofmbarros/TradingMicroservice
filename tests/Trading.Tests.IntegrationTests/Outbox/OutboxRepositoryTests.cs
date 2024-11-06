@@ -7,7 +7,7 @@ using Trading.Domain.Interfaces;
 using Trading.Infrastructure;
 using Trading.Infrastructure.Repositories;
 
-public class OutboxRepositoryTests
+public class OutboxRepositoryTests : IDisposable
 {
     private readonly TradingDbContext dbContext;
     private readonly IOutboxRepository outboxRepository;
@@ -22,10 +22,18 @@ public class OutboxRepositoryTests
         this.outboxRepository = new OutboxRepository(this.dbContext);
     }
 
+    public void Dispose()
+    {
+        this.dbContext.Dispose();
+    }
+
     [Fact]
     public async Task AddOutboxMessageAsync_ShouldAddMessageToDatabase()
     {
         // Arrange
+        await this.dbContext.Database.EnsureDeletedAsync(); // Clear existing data
+        await this.dbContext.SaveChangesAsync();
+
         var message = new OutboxMessage("TestEvent", "{\"data\":\"test\"}");
 
         // Act
@@ -40,6 +48,10 @@ public class OutboxRepositoryTests
     public async Task GetUnprocessedMessagesAsync_ShouldReturnUnprocessedMessages()
     {
         // Arrange
+        // Ensure the database is cleared before running the test
+        await this.dbContext.Database.EnsureDeletedAsync(); // Clear existing data
+        await this.dbContext.SaveChangesAsync();
+
         var message = new OutboxMessage("TestEvent", "{\"data\":\"test\"}");
         await this.outboxRepository.AddOutboxMessageAsync(message);
 

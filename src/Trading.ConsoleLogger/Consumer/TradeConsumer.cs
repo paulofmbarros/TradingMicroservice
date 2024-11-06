@@ -4,7 +4,7 @@ using Confluent.Kafka;
 public class TradeConsumer
 {
     private readonly IConsumer<Null, string> consumer;
-    private readonly string topic;
+    private readonly string topic = "trade-executed";
 
     public TradeConsumer(string bootstrapServers, string topic)
     {

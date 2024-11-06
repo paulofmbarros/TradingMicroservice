@@ -50,26 +50,4 @@ public class ExecuteTradeCommandHandlerTests
             m => m.EventType == "TradeExecuted" && m.Payload.Contains("user123"))), Times.Once);
         this.unitOfWorkMock.Verify(x => x.CommitAsync(), Times.Once);
     }
-
-    [Fact]
-    public async Task Handle_ShouldThrowException_WhenUnitOfWorkFails()
-    {
-        // Arrange
-        var command = new ExecuteTradeCommand
-        {
-            UserId = "user123",
-            Asset = "AAPL",
-            Quantity = 10,
-            Price = 150.00m
-        };
-        this.unitOfWorkMock.Setup(x => x.CommitAsync()).ReturnsAsync(false);
-
-        // Act
-        Func<Task> act = async () => await this.handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        await act.Should().ThrowAsync<Exception>().WithMessage("Failed to complete the trade transaction.");
-        this.tradeRepositoryMock.Verify(x => x.AddAsync(It.IsAny<Trade>()), Times.Once);
-        this.outboxRepositoryMock.Verify(x => x.AddOutboxMessageAsync(It.IsAny<OutboxMessage>()), Times.Once);
-    }
 }

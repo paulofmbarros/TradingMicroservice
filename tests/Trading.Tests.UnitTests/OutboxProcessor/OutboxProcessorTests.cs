@@ -29,13 +29,18 @@ public class OutboxProcessorTests
         var messages = new List<OutboxMessage> { outboxMessage };
 
         this.outboxRepositoryMock.Setup(x => x.GetUnprocessedMessagesAsync()).ReturnsAsync(messages);
+        this.kafkaProducerMock
+            .Setup(x => x.ProduceAsync(It.Is<string>(t => t == "trade-executed"), It.Is<Trade>(t => t.UserId == trade.UserId)))
+            .Returns(Task.CompletedTask)
+            .Verifiable();
 
         // Act
         await this.processor.ProcessOutboxMessagesAsync();
 
         // Assert
-        this.kafkaProducerMock.Verify(x => x.ProduceAsync("trade-executed", trade), Times.Once);
-        this.outboxRepositoryMock.Verify(x => x.MarkMessagesAsProcessedAsync(It.IsAny<List<OutboxMessage>>()), Times.Once);
+        this.kafkaProducerMock.Verify(x => x.ProduceAsync("trade-executed", It.Is<Trade>(t => t.UserId == "user123")), Times.Once);
+        this.outboxRepositoryMock.Verify(x => x.MarkMessagesAsProcessedAsync(It.Is<List<OutboxMessage>>(m => m.Count == 1 && m[0].Processed)), Times.Once);
         outboxMessage.Processed.Should().BeTrue();
     }
+
 }

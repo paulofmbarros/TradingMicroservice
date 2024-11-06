@@ -22,6 +22,8 @@ public class TradeIntegrationTests(TestFixture fixture) : IClassFixture<TestFixt
         var handler = scope.ServiceProvider.GetRequiredService<ExecuteTradeCommandHandler>();
         var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
 
+
+
         var command = new ExecuteTradeCommand
         {
             UserId = "user123",

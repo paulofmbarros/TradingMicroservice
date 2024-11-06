@@ -29,10 +29,10 @@ public class OutboxProcessor
                 {
                     var trade = JsonSerializer.Deserialize<Trade>(message.Payload);
                     await this.kafkaProducer.ProduceAsync("trade-executed", trade);
-                }
 
-                // Mark the message as processed
-                message.Processed = true;
+                    // Mark the message as processed after a successful send
+                    message.Processed = true;
+                }
             }
             catch (Exception ex)
             {
@@ -41,6 +41,7 @@ public class OutboxProcessor
             }
         }
 
+        // Save the state of the processed messages
         await this.outboxRepository.MarkMessagesAsProcessedAsync(messages);
     }
 }

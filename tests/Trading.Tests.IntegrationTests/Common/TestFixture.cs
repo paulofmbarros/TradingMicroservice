@@ -32,6 +32,7 @@ public class TestFixture : IDisposable
         services.AddScoped<ITradeRepository, TradeRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IKafkaProducer, FakeKafkaProducer>(); // Using a fake Kafka producer for testing
+        services.AddScoped<IOutboxRepository, OutboxRepository>(); // Using a fake Kafka producer for testing
         services.AddScoped<ExecuteTradeCommandHandler>();
         services.AddScoped<GetTradesQueryHandler>();
         services.AddScoped<GetTradeByIdQueryHandler>();
