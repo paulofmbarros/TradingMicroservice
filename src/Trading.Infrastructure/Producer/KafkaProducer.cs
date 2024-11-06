@@ -15,7 +15,7 @@ public class KafkaProducer : IKafkaProducer
         this.producer = new ProducerBuilder<Null, string>(config).Build();
     }
 
-    public async Task ProduceAsync(string topic, Trade trade)
+    public async Task ProduceAsync(string topic, Trade? trade)
     {
         var message = JsonSerializer.Serialize(trade);
         await this.producer.ProduceAsync(topic, new Message<Null, string> { Value = message });

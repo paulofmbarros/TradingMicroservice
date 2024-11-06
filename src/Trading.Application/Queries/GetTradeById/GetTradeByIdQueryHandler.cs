@@ -3,6 +3,7 @@
 using MediatR;
 using Trading.Application.DTO;
 using Trading.Domain.Interfaces;
+using Trading.Domain.SeedWork;
 
 public class GetTradeByIdQueryHandler : IRequestHandler<GetTradeByIdQuery, TradeDto>
 {
@@ -17,9 +18,13 @@ public class GetTradeByIdQueryHandler : IRequestHandler<GetTradeByIdQuery, Trade
     {
         var trade = await this.tradeRepository.GetByIdAsync(request.Id);
 
+        if (trade is null)
+        {
+            return null;
+        }
+
         return new TradeDto
         {
-            Id = trade.Id,
             UserId = trade.UserId,
             Asset = trade.Asset,
             Quantity = trade.Quantity,

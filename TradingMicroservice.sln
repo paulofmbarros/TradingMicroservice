@@ -17,7 +17,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trading.ConsoleLogger", "sr
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{8356D9EB-B646-4154-8BA1-6E6CCD8DF99B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trading.Tests", "tests\Trading.Tests\Trading.Tests.csproj", "{0395DDD5-FB58-42DC-AACA-A6A4BFC0ECC2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trading.Tests.UnitTests", "tests\Trading.Tests.UnitTests\Trading.Tests.UnitTests.csproj", "{0395DDD5-FB58-42DC-AACA-A6A4BFC0ECC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trading.Tests.IntegrationTests", "tests\Trading.Tests.IntegrationTests\Trading.Tests.IntegrationTests.csproj", "{48C4A987-0AB4-4136-BCC3-3C3B9F8DE7FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -52,6 +54,10 @@ Global
 		{0395DDD5-FB58-42DC-AACA-A6A4BFC0ECC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0395DDD5-FB58-42DC-AACA-A6A4BFC0ECC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0395DDD5-FB58-42DC-AACA-A6A4BFC0ECC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C4A987-0AB4-4136-BCC3-3C3B9F8DE7FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C4A987-0AB4-4136-BCC3-3C3B9F8DE7FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C4A987-0AB4-4136-BCC3-3C3B9F8DE7FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C4A987-0AB4-4136-BCC3-3C3B9F8DE7FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{102FB41D-4DBC-4F11-A083-31314F5311A9} = {79556427-7C94-4C80-AD5E-95E4B753A0A3}
@@ -60,5 +66,6 @@ Global
 		{836A8C1C-D6DB-4E03-8126-CBA3836D3403} = {79556427-7C94-4C80-AD5E-95E4B753A0A3}
 		{63BBA73E-7252-4776-9475-B613396A581D} = {79556427-7C94-4C80-AD5E-95E4B753A0A3}
 		{0395DDD5-FB58-42DC-AACA-A6A4BFC0ECC2} = {8356D9EB-B646-4154-8BA1-6E6CCD8DF99B}
+		{48C4A987-0AB4-4136-BCC3-3C3B9F8DE7FA} = {8356D9EB-B646-4154-8BA1-6E6CCD8DF99B}
 	EndGlobalSection
 EndGlobal

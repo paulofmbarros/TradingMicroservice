@@ -2,7 +2,6 @@
 
 public class TradeDto
 {
-    public Guid Id { get; set; }
     public string UserId { get; set; }
     public string Asset { get; set; }
     public int Quantity { get; set; }

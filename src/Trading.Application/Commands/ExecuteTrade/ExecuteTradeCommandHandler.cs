@@ -3,6 +3,7 @@
 using MediatR;
 using Trading.Domain.Entities;
 using Trading.Domain.Interfaces;
+using Trading.Domain.SeedWork;
 
 public class ExecuteTradeCommandHandler : IRequestHandler<ExecuteTradeCommand, Guid>
 {
@@ -23,6 +24,6 @@ public class ExecuteTradeCommandHandler : IRequestHandler<ExecuteTradeCommand, G
         await this.tradeRepository.AddAsync(trade);
         await this.unitOfWork.CommitAsync();
         await this.kafkaProducer.ProduceAsync("trade-executed", trade);
-        return trade.Id;
+        return ((EntityBase)trade).Id;
     }
 }

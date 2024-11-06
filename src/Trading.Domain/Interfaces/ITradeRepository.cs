@@ -4,8 +4,8 @@ using Trading.Domain.Entities;
 
 public interface ITradeRepository
 {
-    Task<Trade> GetByIdAsync(Guid id);
-    Task AddAsync(Trade trade);
+    Task<Trade?> GetByIdAsync(Guid id);
+    Task AddAsync(Trade? trade);
 
-    Task<IEnumerable<Trade>> GetAllAsync();
+    Task<IEnumerable<Trade?>> GetAllAsync();
 }
