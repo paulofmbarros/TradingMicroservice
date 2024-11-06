@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Trading.Infrastructure;
 
@@ -11,9 +12,11 @@ using Trading.Infrastructure;
 namespace Trading.Infrastructure.Migrations
 {
     [DbContext(typeof(TradingDbContext))]
-    partial class TradingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241106105934_AddOutboxTable")]
+    partial class AddOutboxTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

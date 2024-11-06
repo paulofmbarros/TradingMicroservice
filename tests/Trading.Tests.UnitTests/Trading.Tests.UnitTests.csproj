@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Trading.Api\Trading.Api.csproj" />
     <ProjectReference Include="..\..\src\Trading.Application\Trading.Application.csproj" />
     <ProjectReference Include="..\..\src\Trading.Domain\Trading.Domain.csproj" />
     <ProjectReference Include="..\..\src\Trading.Infrastructure\Trading.Infrastructure.csproj" />

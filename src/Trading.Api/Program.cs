@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Trading.Api.BackgroundServices;
 using Trading.Application.Commands.ExecuteTrade;
 using Trading.Domain.Interfaces;
 using Trading.Infrastructure;
@@ -19,6 +20,10 @@ builder.Services.AddDbContext<TradingDbContext>(options =>
 
 builder.Services.AddScoped<ITradeRepository, TradeRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
+
+builder.Services.AddHostedService<OutboxBackgroundService>();
+
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ExecuteTradeCommandHandler>());
 

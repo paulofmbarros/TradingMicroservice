@@ -9,4 +9,6 @@ public class TradingDbContext : DbContext
     public TradingDbContext(DbContextOptions<TradingDbContext> options) : base(options) { }
 
     public DbSet<Trade?> Trades { get; set; }
+    public DbSet<OutboxMessage> OutboxMessages { get; set; }
+
 }
