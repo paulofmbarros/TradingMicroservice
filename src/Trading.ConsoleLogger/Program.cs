@@ -15,22 +15,21 @@ class Program
     {
         // Build configuration to read settings from appsettings.json or environment variables
         IHostBuilder hostBuilder = Host.CreateDefaultBuilder(args)
+            .ConfigureAppConfiguration((context, config) =>
+            {
+                config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                config.AddEnvironmentVariables(); // Load environment variables in case they override appsettings.json
+            })
             .ConfigureServices((context, services) =>
             {
                 services.AddSingleton<IConfiguration>(context.Configuration);
-            })
-            .ConfigureAppConfiguration((context, config) =>
-            {
-                config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-                config.AddEnvironmentVariables();
             });
 
         var host = hostBuilder.Build();
-
         var config = host.Services.GetService<IConfiguration>();
 
-        // Read Kafka settings from configuration
-        var bootstrapServers = config["Kafka:BootstrapServers"];
+        // Read Kafka settings from configuration (either from appsettings.json or environment variables)
+        var bootstrapServers = config["Kafka:BootstrapServers"] ?? Environment.GetEnvironmentVariable("KAFKA_BROKER");
         var topic = config["Kafka:Topic"] ?? "trade-executed";
 
         if (string.IsNullOrEmpty(bootstrapServers))

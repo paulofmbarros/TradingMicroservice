@@ -17,7 +17,7 @@ public class OutboxProcessorTests
     {
         this.outboxRepositoryMock = new Mock<IOutboxRepository>();
         this.kafkaProducerMock = new Mock<IKafkaProducer>();
-        this.processor = new OutboxProcessor(this.outboxRepositoryMock.Object, this.kafkaProducerMock.Object);
+        this.processor = new OutboxProcessor(this.outboxRepositoryMock.Object, this.kafkaProducerMock.Object, "localhost:9092");
     }
 
     [Fact]

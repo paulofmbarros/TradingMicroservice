@@ -10,11 +10,14 @@ public class OutboxProcessor
 {
     private readonly IOutboxRepository outboxRepository;
     private readonly IKafkaProducer kafkaProducer;
+    private readonly string kafkaBroker;
 
-    public OutboxProcessor(IOutboxRepository outboxRepository, IKafkaProducer kafkaProducer)
+
+    public OutboxProcessor(IOutboxRepository outboxRepository, IKafkaProducer kafkaProducer, string kafkaBroker)
     {
         this.outboxRepository = outboxRepository;
         this.kafkaProducer = kafkaProducer;
+        this.kafkaBroker = kafkaBroker;
     }
 
     public async Task ProcessOutboxMessagesAsync()

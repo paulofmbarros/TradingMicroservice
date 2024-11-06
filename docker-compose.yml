@@ -1,21 +1,62 @@
 version: '3.8'
 services:
   mysql:
+    hostname: mysql
+    container_name: mysql
     image: mysql:8.0
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: tradingdb
     ports:
       - "3306:3306"
+    networks:
+      - trading-network
 
   kafka:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:6.1.0
+    hostname: kafka
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    expose:
+      - '29092'
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-    ports:
-      - "9092:9092"
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    healthcheck:
+      test: [ "CMD", "kafka-topics", "--bootstrap-server", "kafka:29092", "--list" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+    depends_on:
+      - zookeeper
+    networks:
+      - trading-network
+
+  init-kafka-container:
+     image: "confluentinc/cp-enterprise-kafka:6.1.0"
+     depends_on:
+       kafka:
+         condition: service_healthy
+
+     entrypoint: [ '/bin/sh', '-c' ]
+     command: |
+       "
+       # rather than giving sleep 15 use this
+       # to block init container to wait for Kafka broker to be ready
+       kafka-topics --bootstrap-server kafka:9092 --list
+
+       # create init topics
+       kafka-topics --create --partitions 1 --bootstrap-server kafka:9092 --topic trade-executed
+       "
+     networks:
+       - trading-network
+  
 
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -23,3 +64,37 @@ services:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+    networks:
+      - trading-network
+
+  trading-api:
+    image: trading-api
+    build:
+      context: .
+      dockerfile: src/Trading.Api/Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      KAFKA_BROKER: kafka:9092
+      ConnectionStrings__DefaultConnection: "server=mysql;port=3306;database=tradingdb;user=root;password=root"
+    depends_on:
+      - kafka
+      - mysql
+    networks:
+      - trading-network
+
+  trading-consumer:
+    image: trading-consumer
+    build:
+      context: .
+      dockerfile: src/Trading.ConsoleLogger/Dockerfile
+    environment:
+      KAFKA_BROKER: kafka:9092
+    depends_on:
+      - kafka
+    networks:
+      - trading-network
+
+networks:
+  trading-network:
+    driver: bridge

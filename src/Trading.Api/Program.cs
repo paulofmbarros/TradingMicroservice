@@ -23,6 +23,13 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IOutboxRepository, OutboxRepository>();
 
 builder.Services.AddHostedService<OutboxBackgroundService>();
+builder.Services.AddScoped<OutboxProcessor>(sp =>
+{
+    var outboxRepository = sp.GetRequiredService<IOutboxRepository>();
+    var kafkaProducer = sp.GetRequiredService<IKafkaProducer>();
+    var kafkaBroker = Environment.GetEnvironmentVariable("KAFKA_BROKER") ?? "localhost:9092";
+    return new OutboxProcessor(outboxRepository, kafkaProducer, kafkaBroker);
+});
 
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ExecuteTradeCommandHandler>());
@@ -38,6 +45,20 @@ builder.Services.AddControllers();
 
 
 var app = builder.Build();
+
+// Apply pending migrations at application startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
+    dbContext.Database.Migrate();
+}
+
+// Apply pending migrations at application startup
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<TradingDbContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
