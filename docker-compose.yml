@@ -11,6 +11,11 @@ services:
       - "3306:3306"
     networks:
       - trading-network
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=root --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
 
   kafka:
     image: confluentinc/cp-kafka:6.1.0
@@ -32,7 +37,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-
     depends_on:
       - zookeeper
     networks:
@@ -56,6 +60,11 @@ services:
        "
      networks:
        - trading-network
+    #  healthcheck:
+    #   test: ["CMD", "kafka-topics --bootstrap-server kafka:9092 --list | grep -q trade-executed"]
+    #   interval: 10s
+    #   timeout: 5s
+    #   retries: 5
   
 
   zookeeper:
@@ -78,8 +87,10 @@ services:
       KAFKA_BROKER: kafka:9092
       ConnectionStrings__DefaultConnection: "server=mysql;port=3306;database=tradingdb;user=root;password=root"
     depends_on:
-      - kafka
-      - mysql
+      kafka:
+          condition: service_healthy
+      mysql:
+          condition: service_healthy
     networks:
       - trading-network
 
@@ -91,7 +102,7 @@ services:
     environment:
       KAFKA_BROKER: kafka:9092
     depends_on:
-      - kafka
+      - init-kafka-container
     networks:
       - trading-network
 

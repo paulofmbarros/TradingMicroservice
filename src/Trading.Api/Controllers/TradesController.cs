@@ -11,6 +11,7 @@ using Trading.Application.Queries.GetTradesQuery;
 public class TradesController(IMediator mediator) : ControllerBase
 {
     [HttpPost]
+    [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     public async Task<IActionResult> ExecuteTrade([FromBody] ExecuteTradeCommand command)
     {
         var tradeId = await mediator.Send(command);

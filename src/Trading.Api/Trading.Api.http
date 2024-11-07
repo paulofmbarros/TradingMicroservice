@@ -1,6 +1,14 @@
-@Trading.Api_HostAddress = http://localhost:5043
+### Execute Trade
+POST http://localhost:5000/api/Trades
+Accept: text/plain
+Content-Type: application/json
 
-GET {{Trading.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+{
+  "userId": "534234",
+  "asset": "st245ing",
+  "quantity": 1,
+  "price": 20
+}
+
 
 ###

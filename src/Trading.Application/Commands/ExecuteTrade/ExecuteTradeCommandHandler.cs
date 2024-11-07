@@ -6,7 +6,7 @@ using Trading.Domain.Entities;
 using Trading.Domain.Interfaces;
 using Trading.Domain.SeedWork;
 
-public class ExecuteTradeCommandHandler
+public class ExecuteTradeCommandHandler : IRequestHandler<ExecuteTradeCommand, Guid>
 {
     private readonly ITradeRepository tradeRepository;
     private readonly IUnitOfWork unitOfWork;

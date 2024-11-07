@@ -44,6 +44,8 @@ builder.Services.AddSingleton<IKafkaProducer>(provider =>
 builder.Services.AddControllers();
 
 
+
+
 var app = builder.Build();
 
 // Apply pending migrations at application startup
@@ -68,6 +70,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 
 app.Run();
